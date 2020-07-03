@@ -1,0 +1,475 @@
+﻿
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<title>Multi-page template</title> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.2.1/jquery.mobile-1.2.1.min.js"></script>
+	<script src="./purl.js"></script>
+	
+	<script type="text/javascript">
+		$( document ).ready(function() {
+			$("#email").html("Агент:" + $.url().param('email'));
+			
+			$("#paybutton").click(function() {
+				var strQuery = "toucan://accept-payment?" + makeQuery();
+				window.location.href = strQuery;
+				
+            });
+
+            $("#free_payment").click(function () {
+                var strQuery = "toucan://printer?action=Sale&" + makeQuery();
+                window.location.href = strQuery;
+
+            });
+
+            $("#free_reverse").click(function () {
+                var strQuery = "toucan://printer?action=Return&" + makeQuery();
+                window.location.href = strQuery;
+            });
+			
+			$("#cancelbutton").click(function() {
+				var strQuery = "toucan://reverse-payment?";
+				var q = {};
+				
+				q["successUrl"] = window.location.origin + window.location.pathname + "#success";
+				q["errorUrl"] = window.location.origin + window.location.pathname + "#error";
+				
+				if ($("#trid").val().trim() != "") q["trid"] = $("#trid").val().trim();
+				
+				if ($("#CancelHeader").val().trim() != "") q["PrinterHeader"] = $("#CancelHeader").val().trim();
+				if ($("#CancelFooter").val().trim() != "") q["PrinterFooter"] = $("#CancelFooter").val().trim();
+
+            if ($("#cancelReceiptEmail").val().trim() != "") q["ReceiptEmail"] = $("#cancelReceiptEmail").val().trim();
+			if ($("#cancelReceiptPhone").val().trim() != "") q["ReceiptPhone"] = $("#cancelReceiptPhone").val().trim();
+
+				if ($("#cancel_purchases").val().trim() != "") q["purchases"] = $("#cancel_purchases").val().trim();
+				if ($("#cancel_amount").val().trim() != "") q["amount"] = $("#cancel_amount").val().trim();                                   
+				if ($('input[name="cancel-type"]:checked').val() != "") q["action"] = $('input[name="cancel-type"]:checked').val();
+				
+				
+				strQuery += jQuery.param(q);
+				window.location.href = strQuery;
+				
+            });
+
+            $("#freecancelbutton").click(function () {
+                var strQuery = "toucan://reverse-payment?";
+                var q = {};
+
+                q["successUrl"] = window.location.origin + window.location.pathname + "#success";
+                q["errorUrl"] = window.location.origin + window.location.pathname + "#error";
+
+				if ($("#cancel_purchases").val().trim() != "") q["purchases"] = $("#cancel_purchases").val().trim();
+				if ($("#cancel_amount").val().trim() != "") q["amount"] = $("#cancel_amount").val().trim();                                   
+                if ($('input[name="cancel-type"]:checked').val() != "") q["action"] = $('input[name="cancel-type"]:checked').val();
+
+
+                strQuery += jQuery.param(q);
+                window.location.href = strQuery;
+
+            });
+
+            $("#print_text_button").click(function () {
+                var q = {};
+
+                q["successUrl"] = window.location.origin + window.location.pathname + "#success";
+                q["errorUrl"] = window.location.origin + window.location.pathname + "#error";
+                q["action"] = "PrintText";
+                q["text"] = $("#print_text").val();
+
+                var strQuery = "toucan://printer?" + jQuery.param(q);
+                window.location.href = strQuery;
+            });
+
+            $("#printer_open_shift").click(function () {
+                var q = {};
+
+                q["successUrl"] = window.location.origin + window.location.pathname + "#success";
+                q["errorUrl"] = window.location.origin + window.location.pathname + "#error";
+                q["action"] = "OpenShift";
+               
+
+                var strQuery = "toucan://printer?" + jQuery.param(q);
+                window.location.href = strQuery;
+            });
+
+            $("#printer_close_shift").click(function () {
+                var q = {};
+
+                q["successUrl"] = window.location.origin + window.location.pathname + "#success";
+                q["errorUrl"] = window.location.origin + window.location.pathname + "#error";
+                q["ReadRegisters"] = $("#get_registers").is(':checked');
+                q["action"] = "CloseShift";
+
+                var strQuery = "toucan://printer?" + jQuery.param(q);
+               
+                window.location.href = strQuery;
+            });
+
+            $("#printer_x_report").click(function () {
+                var q = {};
+                q["successUrl"] = window.location.origin + window.location.pathname + "#success";
+                q["errorUrl"] = window.location.origin + window.location.pathname + "#error";
+                q["action"] = "XReport";
+
+
+                var strQuery = "toucan://printer?" + jQuery.param(q);
+                window.location.href = strQuery;
+            });
+
+            $("#printer_y_report").click(function () {
+                var q = {};
+                q["successUrl"] = window.location.origin + window.location.pathname + "#success";
+                q["errorUrl"] = window.location.origin + window.location.pathname + "#error";
+                q["action"] = "YReport";
+                var strQuery = "toucan://printer?" + jQuery.param(q);
+                window.location.href = strQuery;
+            });
+
+            $("#printer_kl1").click(function () {
+                var q = {};
+                q["successUrl"] = window.location.origin + window.location.pathname + "#success";
+                q["errorUrl"] = window.location.origin + window.location.pathname + "#error";
+                q["action"] = "Report1";
+
+                var strQuery = "toucan://printer?" + jQuery.param(q);
+                window.location.href = strQuery;
+            });
+
+			var txt = "";
+			var p = getUrlVars();
+			for (var key in p)
+			txt += key + " : " + decodeURIComponent(p[key]) + "<BR/>";
+			$(".qs").html(txt);
+	
+        });
+
+        function makeQuery() {
+            var strQuery = "";
+            var q = {};
+
+            q["successUrl"] = window.location.origin + window.location.pathname + "#success";
+            q["errorUrl"] = window.location.origin + window.location.pathname + "#error";
+
+            if ($("#amount").val().trim() != "") q["amount"] = $("#amount").val().trim();
+            if ($("#description").val().trim() != "") q["description"] = $("#description").val().trim();
+            if ($('input[name="payment-type"]:checked').val() != "none") q["inputtype"] = $('input[name="payment-type"]:checked').val();
+            if ($("#extID").val().trim() != "") q["extID"] = $("#extID").val().trim();
+            if ($("#purchases").val().trim() != "") q["purchases"] = $("#purchases").val().trim();
+            if ($("#ReceiptEmail").val().trim() != "") q["ReceiptEmail"] = $("#ReceiptEmail").val().trim();
+			if ($("#ReceiptPhone").val().trim() != "") q["ReceiptPhone"] = $("#ReceiptPhone").val().trim();
+			if ($("#Header").val().trim() != "") q["PrinterHeader"] = $("#Header").val().trim();
+			if ($("#Footer").val().trim() != "") q["PrinterFooter"] = $("#Footer").val().trim();
+			if ($("#product").val().trim() != "") q["Product"] = $("#product").val().trim();
+            strQuery += jQuery.param(q);
+
+            return strQuery;
+        }
+				
+		function getQR(qr) {
+			$("#qrcode").html("<H1>QR scanned: " + qr + "</H1>");	
+		}
+
+				function getUrlVars()
+{
+    var vars = [], hash;
+	var hashes = window.location.href;
+	if (hashes.indexOf("#") != -1)
+		hashes = hashes.slice(0, window.location.href.indexOf('#'));
+	hashes = hashes.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++)
+    {
+        hash = hashes[i].split('=');
+        //vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+		
+		
+	</script>
+</head> 
+
+	
+<body> 
+
+<!-- Start of first page: #one -->
+<div data-role="page" id="one">
+
+	<div data-role="header">
+		<h1 id="email"></h1>
+	</div><!-- /header -->
+
+    <div data-role="content">
+        <h2>Title</h2>
+
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sapien nisi, imperdiet et hendrerit et, venenatis nec magna. Maecenas sollicitudin ante tortor. Sed id felis quis risus commodo ullamcorper non id arcu. Cras aliquet lacus est, vitae pulvinar sem convallis sollicitudin. Cras interdum quam ante, eget lacinia erat dignissim ac. Ut eu quam accumsan, vehicula dolor quis, faucibus ipsum. In hac habitasse platea dictumst. Mauris pulvinar nulla magna, vitae commodo nibh dignissim ut. Cras hendrerit eros sit amet cursus fringilla. Donec ac efficitur ex. Integer sodales sapien lacus, in congue neque consequat sed.</p>
+        <p id="qrcode"></p>
+        <p><a href="toucan://scan-qr" data-role="button">Сканировать QR</a></p>
+        <p><a href="#payment" data-role="button">Оплата</a></p>
+        <p><a href="#cancel" data-role="button">Отмена</a></p>
+        <p><a href="#printer" data-role="button">Принтер</a></p>
+    </div><!-- /content -->
+	
+	<div data-role="footer" data-theme="d">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page one -->
+
+
+<div data-role="page" id="payment">
+
+	<div data-role="header">
+		<a href="index.html" data-icon="home">Назад</a>
+		<h1>Оплата</h1>
+	</div><!-- /header -->
+
+    <div data-role="content">
+        <label for="amount">Сумма:</label>
+        <input type="number" name="amount" id="amount" value="100.7" />
+        <label for="description">Описание:</label>
+        <input type="text" name="description" id="description" value="WEB форма (2.0)" />
+        <label for="extID">ExtID:</label>
+        <input type="text" name="extID" id="extID" value="Test007" />
+
+        <label for="ReceiptEmail">Email для отправки чека:</label>
+        <input type="text" name="ReceiptEmail" id="ReceiptEmail" value="y.zakurinov@smart-fin.ru" />
+
+        <label for="ReceiptPhone">Телефон для отправки чека:</label>
+        <input type="text" name="ReceiptPhone" id="ReceiptPhone" value="+79969794172" />
+		
+		 <label for="Header">Хедер:</label>
+        <input type="text" name="Header" id="Header" value="666SATAN666" />
+
+		<label for="Footer">Футер:</label>
+        <input type="text" name="Footer" id="Footer" value="666SATAN666" />
+		
+		<label for="product">Продукт:</label>
+        <input type="text" name="product" id="product" value="Piverk" />
+
+        <fieldset data-role="controlgroup" data-type="horizontal">
+
+            <legend>Тип оплаты</legend>
+
+            <input type="radio" name="payment-type" id="none" value="none" checked="checked" />
+            <label for="none">Любой</label>
+
+            <input type="radio" name="payment-type" id="card" value="CARD" />
+            <label for="card">Картой</label>
+
+            <input type="radio" name="payment-type" id="cash" value="CASH" />
+            <label for="cash">Наличными</label>
+
+            <input type="radio" name="payment-type" id="prepaid" value="PREPAID" />
+            <label for="prepaid">Предоплатой</label>
+
+            <input type="radio" name="payment-type" id="credit" value="CREDIT" />
+            <label for="credit">Кредит</label>
+
+            <input type="radio" name="payment-type" id="link" value="LINK" />
+            <label for="link">По ссылке</label>
+
+            <input type="radio" name="payment-type" id="outer_card" value="OUTER_CARD" />
+            <label for="outer_card">Внешней картой</label>
+
+        </fieldset>
+
+        <label for="purchases">Позиции:</label>
+        <textarea name="purchases" id="purchases">
+{
+    "Version": "2.0",
+
+	"Purchases" : 
+	[
+		
+		{"TaxCode": ["VAT0000"],		"Title": "Позиция 0 ндс",		"Quantity": 1,		"Price": 150.00},
+		{"TaxCode": ["VAT2000"],		"Title": "Позиция 20 ндс",		"Quantity": 2,		"Price": 150.00},
+		{"TaxCode": ["VAT1800"],		"Title": "Позиция 18 ндс",		"Quantity": 3,		"Price": 150.00},
+		{"TaxCode": ["VAT1000"],		"Title": "Позиция 10 ндс",		"Quantity": 4,		"Price": 150.00},
+		{"TaxCode": ["VAT1000_11000"],		"Title": "Позиция 10/110 ндс",		"Quantity": 5,		"Price": 150.00},
+		{"TaxCode": ["VAT2000_12000"],		"Title": "Позиция 20/120 ндс",		"Quantity": 6,		"Price": 150.00},
+		{"TaxCode": ["VATNA"],			"Title": "Позиция без ндс ",		"Quantity": 7,		"Price": 150.00}
+	],
+
+    "Tags": {
+        "1008": "support_spark@mail.ru",
+		"1057": 32,
+		"1227": "Покупателев",
+		"1228": "091899423057"
+    }
+}
+					
+</textarea>
+        <a href="#" data-role="button" id="paybutton">Оплатить</a>
+        <a href="#" data-role="button" id="free_payment">Свободная продажа</a>
+        <a href="#" data-role="button" id="free_reverse">Свободный возврат</a>
+
+    </div><!-- /content -->
+	
+	<div data-role="footer" data-theme="d">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /success -->
+
+
+<div data-role="page" id="cancel">
+
+	<div data-role="header">
+		<a href="index.html" data-icon="home">Назад</a>
+		<h1>Отмена оплаты</h1>
+	</div><!-- /header -->
+
+    <div data-role="content">
+        <label for="trid">ID транзакции:</label>
+        <input type="text" name="trid" id="trid" value="" />
+
+        <label for="amount">Сумма:</label>
+        <input type="number" name="amount" id="cancel_amount" value="" />
+		
+		
+		<!--
+        <label for="CancelReceiptEmail">Email для отправки чека:</label>
+        <input type="text" name="ReceiptEmail" id="CancelReceiptEmail" value="y.zakurinov@smart-fin.ru" />
+
+        <label for="CancelReceiptPhone">Телефон для отправки чека:</label>
+        <input type="text" name="CancelReceiptPhone" id="CancelReceiptPhone" value="+79969794172" />
+		-->
+		 <label for="CancelHeader">Хедер:</label>
+        <input type="text" name="CancelHeader" id="CancelHeader" value="12345" />
+
+		<label for="CancelFooter">Футер:</label>
+        <input type="text" name="CancelFooter" id="CancelFooter" value="98765" />
+
+        <label for="cancelReceiptEmail">Email для отправки чека:</label>
+        <input type="text" name="cancelReceiptEmail" id="cancelReceiptEmail" value="y.zakurinov@smart-fin.ru" />
+
+        <label for="cancelReceiptPhone">Телефон для отправки чека:</label>
+        <input type="text" name="cancelReceiptPhone" id="cancelReceiptPhone" value="+79969794172" />
+
+
+        <fieldset data-role="controlgroup" data-type="horizontal">
+
+            <legend>Тип</legend>
+
+            <input type="radio" name="cancel-type" id="cancel" value="Cancel" />
+            <label for="cancel">Отмена</label>
+            <input type="radio" name="cancel-type" id="return" value="Return" />
+            <label for="return">Возврат</label>
+        </fieldset>
+
+        <label for="purchases">Позиции:</label>
+        <textarea name="purchases" id="cancel_purchases">{
+    "Version": "2.0",
+
+	"Purchases" : 
+	[
+		
+		{"TaxCode": ["VAT0000"],		"Title": "Позиция 0 ндс",		"Quantity": 1,		"Price": 150.00},
+		{"TaxCode": ["VAT2000"],		"Title": "Позиция 20 ндс",		"Quantity": 2,		"Price": 150.00},
+		{"TaxCode": ["VAT1800"],		"Title": "Позиция 18 ндс",		"Quantity": 3,		"Price": 150.00},
+		{"TaxCode": ["VAT1000"],		"Title": "Позиция 10 ндс",		"Quantity": 4,		"Price": 150.00},
+		{"TaxCode": ["VAT1000_11000"],		"Title": "Позиция 10/110 ндс",		"Quantity": 5,		"Price": 150.00},
+		{"TaxCode": ["VAT2000_12000"],		"Title": "Позиция 20/120 ндс",		"Quantity": 6,		"Price": 150.00},
+		{"TaxCode": ["VATNA"],			"Title": "Позиция без ндс ",		"Quantity": 7,		"Price": 150.00}
+	],
+
+    "Tags": {
+        "1008": "support_spark@mail.ru",
+		"1057": 32,
+		"1227": "Покупателев",
+		"1228": "091899423057"
+    }
+}</textarea>
+        <a href="#" data-role="button" id="cancelbutton">Отменить</a>
+        <a href="#" data-role="button" id="freecancelbutton">Кредит-ваучер</a>
+
+    </div><!-- /content -->
+	
+	<div data-role="footer" data-theme="d">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /success -->
+
+<div data-role="page" id="printer" data-theme="b">
+
+
+    <div data-role="header">
+        <a href="index.html" data-icon="home">Назад</a>
+        <h1>Успешно</h1>
+    </div><!-- /header -->
+
+    <div data-role="content">
+        <label for="print_text">Текст для печати:</label>
+        <textarea name="print_text" id="print_text">
+
+		
+		
+		Это текст для печати
+		
+		
+		
+    </textarea>
+        <a href="#" data-role="button" id="print_text_button">Печать текста</a>
+        <a href="#" data-role="button" id="printer_open_shift">Открыть смену</a>
+        <br />
+        <label for="get_registers">Получить регистры при закрытии смены</label>
+        <input type="checkbox" name="get_registers" id="get_registers">
+        <a href="#" data-role="button" id="printer_close_shift">Закрыть смену</a>
+        <br />
+        <a href="#" data-role="button" id="printer_x_report">X-отчет</a>
+        <a href="#" data-role="button" id="printer_y_report">Y-отчет</a>
+        <a href="#" data-role="button" id="printer_kl1">КЛ1</a>
+
+    </div>
+
+    <div data-role="footer" data-theme="d">
+        <h4>Page Footer</h4>
+    </div><!-- /footer -->
+</div><!-- /success -->
+
+<div data-role="page" id="success" data-theme="b">
+
+	<div data-role="header">
+		<a href="index.html" data-icon="home">Назад</a>
+		<h1>Успешно</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<div class="qs"></div>
+		
+		<p></p>	
+		
+	</div><!-- /content -->
+	
+	<div data-role="footer" data-theme="d">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /success -->
+
+<div data-role="page" id="error" data-theme="a">
+
+	<div data-role="header">
+		<a href="index.html" data-icon="home">Назад</a>
+		<h1>Ошибка</h1>
+	</div><!-- /header -->
+
+	<div data-role="content" data-theme="a">	
+		<h2></h2>
+		
+				<div class="qs"></div>
+
+	</div><!-- /content -->
+	
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /success -->
+
+
+</body>
+</html>
